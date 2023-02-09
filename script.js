@@ -31,7 +31,6 @@ question.style.resize = 'none';
 question.style.backgroundColor = bgColor;
 
 document.getElementById('checkboxs').style.padding = '20px';
-
 document.getElementById('date').style.margin = '20px';
 
 const submitBtn = document.getElementById('submit-btn');
