@@ -1,0 +1,38 @@
+body { 
+    width: 700px; 
+    margin-left: auto;
+    margin-right: auto; 
+  }
+  #title {
+    margin-left: 110px;
+  }
+  
+  #color-palette {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 10px 0;
+    margin-left: 30px;
+  }
+  
+  .color {
+    width: 80px;
+    height: 80px;
+    border: 1px solid;
+    margin: 10px;
+    border-radius: 50%;
+  }
+  
+  #pixel-board {
+    display: flex;
+    flex-wrap: wrap;
+    width: 250px;
+    margin-left: 110px;
+  }
+  
+  .pixel {
+    border: 1px solid ;
+  }
+  
+  #button-random-color {
+    margin-left: 107px;
+  }
