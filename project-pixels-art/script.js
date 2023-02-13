@@ -58,9 +58,10 @@ randomColorBtn.addEventListener('click', () => {
     randomColors.push(`#${randomHex}`);
   }
   palette.innerHTML = '';
-  randomColors.forEach((color) => {
+  randomColors.forEach((color, index) => {
     const colorPalette = document.createElement('div');
-    colorPalette.className = 'color';
+    colorPalette.setAttribute('id', index)
+    colorPalette.className = color === 'black' ? 'color selected' : 'color';
     colorPalette.style.backgroundColor = color;
     palette.appendChild(colorPalette);
   });
@@ -73,14 +74,25 @@ window.addEventListener('load', () => {
   if (savedPalette) {
     const colors = JSON.parse(savedPalette);
     palette.innerHTML = '';
-    colors.forEach((color) => {
+    colors.forEach((color, index) => {
       const colorPalette = document.createElement('div');
-      colorPalette.className = 'color';
+      colorPalette.setAttribute('id', index);
+      colorPalette.className = color === 'black' ? 'color selected' : 'color';
       colorPalette.style.backgroundColor = color;
       palette.appendChild(colorPalette);
     });
   }
 });
+
+window.addEventListener('click', (e) => {
+  if(e.target.className.includes('color')){
+    const actualColor = document.querySelectorAll('.selected');
+    actualColor[0].classList.remove('selected');
+    const labelClicked = document.getElementById(e.target.id);
+    console.log(labelClicked);
+    labelClicked.classList.add('selected');
+  }
+})
 
 // Adiciona à página um quadro contendo 25 pixels e
 // faça com que cada pixel do quadro tenha largura e altura de 40 pixels e borda preta de 1 pixel de espessura.
@@ -160,7 +172,8 @@ function saveBoard(pixelElements) {
 
 pixelElements.forEach((pixelElement) => {
   pixelElement.addEventListener('click', () => {
-    pixelElement.style.backgroundColor = selectedColor.style.backgroundColor;
+    const checkActualColor = document.querySelector('.selected');
+    pixelElement.style.backgroundColor = checkActualColor.style.backgroundColor;
     saveBoard(pixelElements);
   });
 });
