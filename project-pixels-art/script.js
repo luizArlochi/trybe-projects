@@ -1,4 +1,4 @@
-// Requisito 1 - Adicione à página o título "Paleta de Cores"
+// Adiciona à página o título "Paleta de Cores"
 
 const title = document.createElement('h1');
 title.id = 'title';
@@ -6,7 +6,7 @@ const text = document.createTextNode('Paleta de Cores');
 title.appendChild(text);
 document.body.appendChild(title);
 
-// Requisito 2 - Adicione à página uma paleta contendo quatro cores distintas
+// Adiciona à página uma paleta contendo quatro cores distintas
 
 const palette = document.createElement('div');
 palette.id = 'color-palette';
@@ -14,9 +14,8 @@ document.body.appendChild(palette);
 
 const colors = ['red', 'green', 'blue', 'yellow'];
 
-// Requisito 3 - Adicione a cor preta como a primeira cor da paleta de cores.
-
-// Requisito 8 - Defina a cor preta como cor inicial da paleta de cores (linhas 28 e 29)
+// Adiciona a cor preta como a primeira cor da paleta de cores e
+// defina a cor preta como cor inicial da paleta de cores.
 function allColors() {
   colors.unshift('black');
   colors.slice(0, 4).forEach(color => {
@@ -32,21 +31,21 @@ function allColors() {
 }
 allColors();
 
-// Requisito 4 - Adicione um botão para gerar cores aleatórias para a paleta de cores.
+// Adiciona um botão para gerar cores aleatórias para a paleta de cores.
 
 const randomColorBtn = document.createElement('button');
 randomColorBtn.id = 'button-random-color';
 randomColorBtn.innerHTML = 'Cores aleatórias';
 document.body.appendChild(randomColorBtn);
 
-// Requisito 11 - Crie um botão que retorne a cor do quadro para a cor inicial.
+// Cria um botão que retorne a cor do quadro para a cor inicial.
 
 const clearBoardBtn = document.createElement('button');
 clearBoardBtn.id = 'clear-board';
 clearBoardBtn.innerHTML = 'Limpar quadro';
 document.body.appendChild(clearBoardBtn);
 
-// Requisito 5 - Implemente uma função usando localStorage para que a paleta de cores gerada aleatoriamente seja mantida após recarregar a página.
+// Implementa uma função usando localStorage para que a paleta de cores gerada aleatoriamente seja mantida após recarregar a página.
 
 function savePalette(colors) {
   localStorage.setItem('colorPalette', JSON.stringify(colors));
@@ -59,19 +58,43 @@ randomColorBtn.addEventListener('click', () => {
     randomColors.push(`#${randomHex}`);
   }
   palette.innerHTML = '';
-  randomColors.forEach((color) => {
+  randomColors.forEach((color, index) => {
     const colorPalette = document.createElement('div');
-    colorPalette.className = 'color';
+    colorPalette.setAttribute('id', index)
+    colorPalette.className = color === 'black' ? 'color selected' : 'color';
     colorPalette.style.backgroundColor = color;
     palette.appendChild(colorPalette);
   });
-  const firstIndex = document.querySelector('.color');
-  firstIndex.className = 'selected';
 
   savePalette(randomColors);
 });
 
-// Requisitos 6 e 7 Adicione à página um quadro contendo 25 pixels e
+window.addEventListener('load', () => {
+  const savedPalette = localStorage.getItem('colorPalette');
+  if (savedPalette) {
+    const colors = JSON.parse(savedPalette);
+    palette.innerHTML = '';
+    colors.forEach((color, index) => {
+      const colorPalette = document.createElement('div');
+      colorPalette.setAttribute('id', index);
+      colorPalette.className = color === 'black' ? 'color selected' : 'color';
+      colorPalette.style.backgroundColor = color;
+      palette.appendChild(colorPalette);
+    });
+  }
+});
+
+window.addEventListener('click', (e) => {
+  if(e.target.className.includes('color')){
+    const actualColor = document.querySelectorAll('.selected');
+    actualColor[0].classList.remove('selected');
+    const labelClicked = document.getElementById(e.target.id);
+    console.log(labelClicked);
+    labelClicked.classList.add('selected');
+  }
+})
+
+// Adiciona à página um quadro contendo 25 pixels e
 // faça com que cada pixel do quadro tenha largura e altura de 40 pixels e borda preta de 1 pixel de espessura.
 
 const pixelBoard = document.createElement('div');
@@ -89,64 +112,42 @@ for (let index = 0; index < 5; index += 1) {
   }
 }
 
-// Requisito 9 - Crie uma função para selecionar uma cor na paleta de cores.
+// Cria uma função para selecionar uma cor na paleta de cores.
 
-const handleChange = () => {
-  const colorElements = document.querySelectorAll('.color');
-  console.log(colorElements);
-  colorElements.forEach((colorElement) => {
-    colorElement.addEventListener('click', (event) => {
-      const markedColor = event.currentTarget;
-      if (!markedColor.classList.contains('selected')) {
-        colorElements.forEach((color) => {
-          color.classList.remove('selected');
-        });
-        markedColor.classList.add('selected');
-      }
-    });
-  });
-};
+const colorElements = document.querySelectorAll('.color');
 
-window.addEventListener('load', () => {
-  const savedPalette = localStorage.getItem('colorPalette');
-  let actualColor = '';
-  if (savedPalette) {
-    const colors = JSON.parse(savedPalette);
-    palette.innerHTML = '';
-    colors.forEach((color) => {
-      const colorPalette = document.createElement('div');
-      colorPalette.addEventListener('click', () => {
-        handleChange();
+colorElements.forEach((colorElement) => {
+  colorElement.addEventListener('click', (event) => {
+    const selectedColor = event.currentTarget;
+    if (!selectedColor.classList.contains('selected')) {
+      colorElements.forEach((color) => {
+        color.classList.remove('selected');
       });
-      colorPalette.className = 'color';
-      colorPalette.style.backgroundColor = color;
-      palette.appendChild(colorPalette);
-    });
-  }
+      selectedColor.classList.add('selected');
+    }
+  });
 });
 
-// Requisito 10 - Crie uma função que permita preencher um pixel do quadro com a cor selecionada na paleta de cores.
+// Cria uma função que permita preencher um pixel do quadro com a cor selecionada na paleta de cores.
 
 const pixelElements = document.querySelectorAll('.pixel');
 let selectedColor = document.querySelector('.selected');
 
-// colorElements.forEach((colorElement) => {
-//   colorElement.addEventListener('click', (event) => {
-//     selectedColor.classList.remove('selected');
-//     selectedColor = event.currentTarget;
-//     selectedColor.classList.add('selected');
-//   });
-// });
-
-pixelElements.forEach((pixelElement) => {
-  pixelElement.addEventListener('click', (event) => {
-    pixelElement.style.backgroundColor = selectedColor.style.backgroundColor;
-    console.log(selectedColor.style.backgroundColor);
-    console.log(se);
+colorElements.forEach((colorElement) => {
+  colorElement.addEventListener('click', () => {
+    selectedColor.classList.remove('selected');
+    selectedColor = event.currentTarget;
+    selectedColor.classList.add('selected');
   });
 });
 
-// Requisito 11 - Crie um botão que retorne a cor do quadro para a cor inicial.
+pixelElements.forEach((pixelElement) => {
+  pixelElement.addEventListener('click', () => {
+    pixelElement.style.backgroundColor = selectedColor.style.backgroundColor;
+  });
+});
+
+// Cria um botão que retorne a cor do quadro para a cor inicial.
 
 clearBoardBtn.addEventListener('click', () => {
   const pixels = document.querySelectorAll('.pixel');
@@ -155,7 +156,7 @@ clearBoardBtn.addEventListener('click', () => {
   });
 });
 
-// Requisito 12 - Crie uma função para salvar e recuperar o seu desenho atual no localStorage.
+// Cria uma função para salvar e recuperar o seu desenho atual no localStorage.
 
 function saveBoard(pixelElements) {
   const pixels = [];
@@ -171,7 +172,8 @@ function saveBoard(pixelElements) {
 
 pixelElements.forEach((pixelElement) => {
   pixelElement.addEventListener('click', () => {
-    pixelElement.style.backgroundColor = selectedColor.style.backgroundColor;
+    const checkActualColor = document.querySelector('.selected');
+    pixelElement.style.backgroundColor = checkActualColor.style.backgroundColor;
     saveBoard(pixelElements);
   });
 });
